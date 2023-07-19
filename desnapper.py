@@ -37,7 +37,7 @@ def install_flatpak():
     if install_flatpak_or_not.lower() == 'y' or install_flatpak_or_not == '':
 
         #Install Flatpak/Flathub
-        os.system('sudo apt install flatpak -y && sudo apt install gnome-software-plugin-flatpak -y && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
+        os.system('sudo apt install gnome-software -y && sudo apt install flatpak -y && sudo apt install gnome-software-plugin-flatpak -y && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
         os.system('echo "\nFlatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."')
 
     #Run if the user did not consent to installing Flatpak/Flathub
