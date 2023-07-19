@@ -1,7 +1,7 @@
 #!/bin/bash
 
 newline=$'\n'
-snap_packages=$(flatpak list | awk 'NR > 1 {print $1}')
+snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 
 installed_packages() {
     snap_packages_list='\n' read -r -a array <<< "$string"
