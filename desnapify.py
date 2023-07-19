@@ -22,11 +22,11 @@ def purge_snaps():
         sys.exit()
 
 def install_flatpak():
-    install_flatpak_or_not = input('Would you like to install enable Flatpak and Flathub? Y/n: ')
+    install_flatpak_or_not = input('Would you like to install and enable Flatpak and Flathub? Y/n: ')
 
     if install_flatpak_or_not.lower() == 'y' or install_flatpak_or_not == '':
         os.system('sudo apt install flatpak && sudo apt install gnome-software-plugin-flatpak && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
-        os.system('echo "\nFlatpak installed and enabled! Reboot for the changes to take effect."')
+        os.system('echo "\nFlatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."')
     else:
         os.system('echo "Okay, exiting..."')
         sys.exit()
