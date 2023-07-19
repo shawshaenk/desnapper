@@ -2,7 +2,7 @@
 A simple Python script to rid Ubuntu 18.10 and above of Snaps and prevent them from coming back.
 
 # Dependencies
-To run this script, you'll need python3. Ubuntu comes with it by default, but just in case run this command in the terminal:
+To run this script, you'll need python3. Ubuntu comes with it by default, but just in case, run this command in the terminal:
 ```
 sudo apt install python3
 ```
