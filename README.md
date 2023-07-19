@@ -1,7 +1,7 @@
 # About
 A simple Python script to rid Ubuntu of Snaps and prevent them from coming back.
 
-Note: As of right now, this script is meant specifically for Ubuntu, not its spins. This may change later.
+Note: As of right now, this script is meant specifically for Ubuntu, not its flavors. This may change later.
 
 # Dependencies
 To run this script, you'll need python3. Ubuntu comes with it by default, but just in case, run this command in the terminal:
