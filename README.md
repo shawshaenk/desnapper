@@ -1,4 +1,4 @@
-# Desnapper
+# About
 A simple Python script to rid Ubuntu 18.10 and above of Snaps.
 
 # Dependencies
