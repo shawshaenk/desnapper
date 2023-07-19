@@ -20,7 +20,7 @@ def purge_snaps():
                     os.system(f'sudo snap remove --purge {snap_program}')
 
         #Remove snap remnants
-        os.system('sudo snap remove --purge snapd && sudo rm -rf /var/cache/snapd/ && sudo apt autoremove --purge snapd gnome-software-plugin-snap && sudo rm -rf ~/snap && sudo apt-mark hold snapd')
+        os.system('sudo snap remove --purge snapd && sudo rm -rf /var/cache/snapd/ && sudo apt autoremove --purge snapd gnome-software-plugin-snap -y && sudo rm -rf ~/snap && sudo apt-mark hold snapd')
         os.system('echo "\nAll snaps packages have been purged!"')   
     
     #Run if user did not consent to removing all snaps
@@ -37,7 +37,7 @@ def install_flatpak():
     if install_flatpak_or_not.lower() == 'y' or install_flatpak_or_not == '':
 
         #Install Flatpak/Flathub
-        os.system('sudo apt install flatpak && sudo apt install gnome-software-plugin-flatpak && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
+        os.system('sudo apt install flatpak -y && sudo apt install gnome-software-plugin-flatpak -y && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
         os.system('echo "\nFlatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."')
 
     #Run if the user did not consent to installing Flatpak/Flathub
