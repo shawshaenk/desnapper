@@ -1,5 +1,5 @@
 # About
-A simple Python script to rid Ubuntu and above of Snaps and prevent them from coming back.
+A simple Python script to rid Ubuntu of Snaps and prevent them from coming back.
 
 Note: As of right now, this script is meant specifically for Ubuntu, not its spins. This may change with future releases.
 
