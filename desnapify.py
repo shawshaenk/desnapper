@@ -15,17 +15,17 @@ def purge_snaps():
                     os.system(f'sudo snap remove --purge {snap_program}')
 
         os.system('sudo snap remove --purge snapd && sudo rm -rf /var/cache/snapd/ && sudo apt autoremove --purge snapd gnome-software-plugin-snap && sudo rm -rf ~/snap && sudo apt-mark hold snapd')
-        os.system('echo "All snaps packages have been purged!"')   
+        os.system('echo "\nAll snaps packages have been purged!"')   
     else:
         os.system('echo "Okay, exiting..."')
         sys.exit()
 
 def install_flatpak():
-    install_flatpak_or_not = input('\nWould you like to install enable Flatpak and Flathub? Y/n: ')
+    install_flatpak_or_not = input('sWould you like to install enable Flatpak and Flathub? Y/n: ')
 
     if install_flatpak_or_not.lower() == 'y' or install_flatpak_or_not == '':
         os.system('sudo apt install flatpak && sudo apt install gnome-software-plugin-flatpak && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
-        os.system('echo "Flatpak installed and enabled! Reboot for the changes to take effect."')
+        os.system('echo "\nFlatpak installed and enabled! Reboot for the changes to take effect."')
     else:
         os.system('echo "Okay, exiting..."')
         sys.exit()
