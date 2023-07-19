@@ -10,9 +10,9 @@ def purge_snaps():
 
     #Run if the user enters Y, y, or enter
     if desnap_or_not.lower() == 'y' or desnap_or_not == '':
-        installed_snaps = data.stdout.split('\n')
 
         #Iterate through installed snaps and purge them
+        installed_snaps = data.stdout.split('\n')
         for num in range (0, 2):
             for snap_program in installed_snaps:
                 if snap_program != 'snapd':
