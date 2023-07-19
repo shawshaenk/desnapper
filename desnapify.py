@@ -12,6 +12,7 @@ def purge_snaps():
         for num in range (0, 2):
             for snap_program in installed_snaps:
                 if snap_program != 'snapd':
+                    os.system(f'killall {snap_program}')
                     os.system(f'sudo snap remove --purge {snap_program}')
 
         os.system('sudo snap remove --purge snapd && sudo rm -rf /var/cache/snapd/ && sudo apt autoremove --purge snapd gnome-software-plugin-snap && sudo rm -rf ~/snap && sudo apt-mark hold snapd')
@@ -21,7 +22,7 @@ def purge_snaps():
         sys.exit()
 
 def install_flatpak():
-    install_flatpak_or_not = input('sWould you like to install enable Flatpak and Flathub? Y/n: ')
+    install_flatpak_or_not = input('Would you like to install enable Flatpak and Flathub? Y/n: ')
 
     if install_flatpak_or_not.lower() == 'y' or install_flatpak_or_not == '':
         os.system('sudo apt install flatpak && sudo apt install gnome-software-plugin-flatpak && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
