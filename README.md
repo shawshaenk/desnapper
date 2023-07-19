@@ -8,7 +8,7 @@ sudo apt install python3
 ```
 
 # Running the Script
-To run the script download the latest release of desnapper and extract the downloaded file. You should then see a new folder called "desnapper-main." Open a terminal to the path of the extracted folder and run:
+To run the script download the latest .zip release of desnapper and extract the file. You should now see a new folder. Open a terminal pointed to the folder's path and run this command:
 ```
 python3 desnapper.py
 ```
