@@ -19,7 +19,7 @@ def purge_snaps():
                     os.system(f'killall {snap_program}')
                     os.system(f'sudo snap remove --purge {snap_program}')
 
-        #Remove snap remnants
+        #Remove snap remnants and install gnome-software
         os.system('sudo snap remove --purge snapd && sudo rm -rf /var/cache/snapd/ && sudo apt autoremove --purge snapd gnome-software-plugin-snap -y && sudo rm -rf ~/snap && sudo apt-mark hold snapd && sudo apt install gnome-software -y')
         os.system('echo "\nAll snaps packages have been purged!"')   
     
