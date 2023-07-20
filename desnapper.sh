@@ -4,8 +4,8 @@ newline=$'\n'
 snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 
 installed_packages() {
-    read -r -a snap_packages_list <<< "$snap_packages"
-    for num in 1 2; do
+    IFS=' ' read -ra snap_packages_list <<< "$snap_packages"
+    for num in 1 3; do
         for snap in "${snap_packages_list[@]}"; do
             if [ "$snap" != "snapd" ]; then 
                 killall "$snap"
