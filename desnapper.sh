@@ -21,8 +21,8 @@ purge_snaps() {
     echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref
     sudo apt update
     sudo apt install --install-suggests gnome-software -y
-    sudo apt install xtradeb-apps-apt-source -y
-    sudo chmod o-w nosnap.pref
+    sudo add-apt-repository ppa:xtradeb/play -y
+    sudo chmod o-w /etc/apt/preferences.d/nosnap.pref
     sudo chmod o-w /etc/apt/preferences.d
 
     echo $newline All snaps packages have been purged!
@@ -37,10 +37,12 @@ install_firefox_deb () {
     sudo chmod o+w /etc/apt/apt.conf.d/51unattended-upgrades-firefox
     echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
     sudo chmod o+w /etc/apt/preferences.d
-    sudo touch /etc/apt/preferences.d/mozillateamppa 
-    echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501"
+    sudo touch /etc/apt/preferences.d/mozillateamppa
+    sudo chmod o+w /etc/apt/preferences.d/mozillateamppa
+    echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501" >> /etc/apt/preferences.d/mozillateamppa 
     sudo chmod o-w /etc/apt/apt.conf.d/51unattended-upgrades-firefox
     sudo chmod o-w /etc/apt/apt.conf.d
+    sudo chmod o-w /etc/apt/preferences.d/mozillateamppa
     sudo chmod o-w /etc/apt/preferences.d
 
     echo $newline Firefox .deb sucessfully installed!
