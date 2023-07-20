@@ -8,14 +8,18 @@ purge_snaps() {
     for num in 1 3; do
         for snap in "${snap_packages_list[@]}"; do
             if [ "$snap" != "snapd" ]; then 
-                killall "$snap"
-                sudo snap remove --purge "$snap"
+                killall $snap
+                sudo snap remove --purge $snap
             fi
         done
     done
     
-    sudo snap remove --purge snapd && sudo rm -rf /var/cache/snapd/ && sudo apt autoremove --purge snapd gnome-software-plugin-snap -y && sudo rm -rf ~/snap && sudo apt-mark hold snapd && sudo apt install gnome-software -y
+    sudo apt remove --autoremove snapd && touch /etc/apt/preferences.d/nosnap.pref && echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref && sudo apt update && sudo apt install --install-suggests gnome-software
     echo $newline All snaps packages have been purged!
+}
+
+install_firefox_deb () {
+    sudo add-apt-repository ppa:mozillateam/ppa && sudo apt update && sudo apt install -t 'o=LP-PPA-mozillateam' firefox && echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox && touch /etc/apt/preferences.d/mozillateamppa && echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501"
 }
 
 install_flatpak() {
@@ -24,7 +28,7 @@ install_flatpak() {
 }
 
 while true; do
-    read -p $"${newline} WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n]" yn
+    read -p $"WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n]" yn
     case $yn in 
         [yY] ) purge_snaps;
         break;;
@@ -35,7 +39,18 @@ while true; do
 done
 
 while true; do
-    read -p $"${newline} Would you like to install Flatpak/Flathub?" yn
+    read -p $"${newline}Would you like to install the Firefox .deb package? [Y/n]" yn
+    case $yn in 
+        [yY] ) install_firefox_deb;
+        break;;
+        [nN] ) echo $newline Okay;
+        break;;
+        * ) echo "${newline}Invalid response, try again!${newline}";
+    esac
+done
+
+while true; do
+    read -p $"${newline}Would you like to install Flatpak/Flathub? [Y/n]" yn
     case $yn in 
         [yY] ) install_flatpak;
         break;;
@@ -44,4 +59,3 @@ while true; do
         * ) echo "${newline}Invalid response, try again!${newline}";
     esac
 done
-
