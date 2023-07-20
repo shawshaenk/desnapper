@@ -17,11 +17,10 @@ purge_snaps() {
     sudo apt remove --autoremove snapd -y 
     sudo chmod o+w /etc/apt/preferences.d
     sudo touch /etc/apt/preferences.d/nosnap.pref
-    sudo chmod o+w nosnap.pref
+    sudo chmod o+w /etc/apt/preferences.d/nosnap.pref
     echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref
     sudo apt update
     sudo apt install --install-suggests gnome-software -y
-    sudo add-apt-repository ppa:xtradeb/play -y
     sudo chmod o-w /etc/apt/preferences.d/nosnap.pref
     sudo chmod o-w /etc/apt/preferences.d
 
