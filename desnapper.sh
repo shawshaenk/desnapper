@@ -14,17 +14,43 @@ purge_snaps() {
         done
     done
     
-    sudo apt remove --autoremove snapd -y && sudo chmod o+w /etc/apt/preferences.d && sudo touch /etc/apt/preferences.d/nosnap.pref && echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref && sudo apt update && sudo apt install --install-suggests gnome-software -y && sudo chmod o-w /etc/apt/preferences.d
+    sudo apt remove --autoremove snapd -y 
+    sudo chmod o+w /etc/apt/preferences.d
+    sudo touch /etc/apt/preferences.d/nosnap.pref
+    sudo chmod o+w nosnap.pref
+    echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref
+    sudo apt update
+    sudo apt install --install-suggests gnome-software -y
+    sudo apt install xtradeb-apps-apt-source -y
+    sudo chmod o-w nosnap.pref
+    sudo chmod o-w /etc/apt/preferences.d
+
     echo $newline All snaps packages have been purged!
 }
 
 install_firefox_deb () {
-    sudo add-apt-repository ppa:mozillateam/ppa -y && sudo apt update -y && sudo apt install -t 'o=LP-PPA-mozillateam' firefox -y && sudo chmod o+w /etc/apt/apt.conf.d && echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox && sudo touch /etc/apt/preferences.d/mozillateamppa && echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501" && sudo chmod o-w /etc/apt/apt.conf.d
+    sudo add-apt-repository ppa:mozillateam/ppa -y 
+    sudo apt update -y
+    sudo apt install -t 'o=LP-PPA-mozillateam' firefox -y
+    sudo chmod o+w /etc/apt/apt.conf.d
+    sudo touch /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+    sudo chmod o+w /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+    echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+    sudo chmod o+w /etc/apt/preferences.d
+    sudo touch /etc/apt/preferences.d/mozillateamppa 
+    echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501"
+    sudo chmod o-w /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+    sudo chmod o-w /etc/apt/apt.conf.d
+    sudo chmod o-w /etc/apt/preferences.d
+
     echo $newline Firefox .deb sucessfully installed!
 }
 
 install_flatpak() {
-    sudo apt install flatpak -y && sudo apt install gnome-software-plugin-flatpak -y && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    sudo apt install flatpak -y
+    sudo apt install gnome-software-plugin-flatpak -y
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
     echo $newline Flatpak and Flathub are now installed and enabled! Reboot for the changes to take effect.
 }
 
