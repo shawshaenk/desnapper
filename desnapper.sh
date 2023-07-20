@@ -16,10 +16,10 @@ purge_snaps() {
     
     sudo apt remove --autoremove snapd -y 
     echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" | sudo tee /etc/apt/preferences.d/nosnap.pref
-    sudo apt update
+    sudo apt update -y
     sudo apt install --install-suggests gnome-software -y
 
-    echo "${newline} All snaps packages have been purged!"
+    echo "${newline}All snaps packages have been purged!"
 }
 
 install_firefox_deb () {
@@ -29,7 +29,7 @@ install_firefox_deb () {
     echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
     echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501" | sudo tee /etc/apt/preferences.d/mozillateamppa
 
-    echo "{$newline} Firefox .deb sucessfully installed!"
+    echo "${newline}Firefox .deb sucessfully installed!"
 }
 
 install_flatpak() {
@@ -37,7 +37,7 @@ install_flatpak() {
     sudo apt install gnome-software-plugin-flatpak -y
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    echo "${newline} Flatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."
+    echo "${newline}Flatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."
 }
 
 while true; do
@@ -56,7 +56,7 @@ while true; do
     case $yn in 
         [yY] ) install_firefox_deb;
         break;;
-        [nN] ) echo "${newline} Okay";
+        [nN] ) echo "${newline}Okay";
         break;;
         * ) echo "${newline}Invalid response, try again!${newline}";
     esac
@@ -67,7 +67,7 @@ while true; do
     case $yn in 
         [yY] ) install_flatpak;
         break;;
-        [nN] ) echo "${newline} Okay";
+        [nN] ) echo "${newline}Okay";
         break;;
         * ) echo "${newline}Invalid response, try again!${newline}";
     esac
