@@ -8,18 +8,19 @@ purge_snaps() {
     for num in 1 3; do
         for snap in "${snap_packages_list[@]}"; do
             if [ "$snap" != "snapd" ]; then 
-                killall $snap
-                sudo snap remove --purge $snap
+                killall $snap -y
+                sudo snap remove --purge $snap -y
             fi
         done
     done
     
-    sudo apt remove --autoremove snapd && touch /etc/apt/preferences.d/nosnap.pref && echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref && sudo apt update && sudo apt install --install-suggests gnome-software
+    sudo apt remove --autoremove snapd -y && chmod o+w /etc/apt/preferences.d && sudo touch /etc/apt/preferences.d/nosnap.pref && echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" >> /etc/apt/preferences.d/nosnap.pref && sudo apt update && sudo apt install --install-suggests gnome-software -y
     echo $newline All snaps packages have been purged!
 }
 
 install_firefox_deb () {
-    sudo add-apt-repository ppa:mozillateam/ppa && sudo apt update && sudo apt install -t 'o=LP-PPA-mozillateam' firefox && echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox && touch /etc/apt/preferences.d/mozillateamppa && echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501"
+    sudo add-apt-repository ppa:mozillateam/ppa -y && sudo apt update -y && sudo apt install -t 'o=LP-PPA-mozillateam' firefox -y && chmod o+w /etc/apt/apt.conf.d && echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox && sudo touch /etc/apt/preferences.d/mozillateamppa && echo "Package: firefox*${newline}Pin: release o=LP-PPA-mozillateam${newline}Pin-Priority: 501"
+    echo $newline Firefox .deb sucessfully installed!
 }
 
 install_flatpak() {
