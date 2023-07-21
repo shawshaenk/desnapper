@@ -14,9 +14,16 @@ fi
 ask_for_flavor() {
     while true
     do
-        read -p 'Input what flavor of Ubuntu you're running${newline}Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: ' flavor
-        if [$flavor != "Ubuntu"] || [$flavor != "ubuntu"] || [$flavor != "Kubuntu"] || [$flavor != "kubuntu"]
+        read -p "Input what flavor of Ubuntu you're running${newline}Note: Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
+
+        # Convert the input to lowercase for case-insensitive comparison
+        flavor=$(echo "$flavor" | tr '[:upper:]' '[:lower:]')
+
+        # Check if the flavor is valid and break the loop if it is
+        if [ "$flavor" == "ubuntu" ] || [ "$flavor" == "kubuntu" ]
         then
+            break
+        else
             echo "${newline}Invalid response, please try again!${newline}"
         fi
     done
@@ -37,7 +44,7 @@ purge_snaps() {
     echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" | sudo tee /etc/apt/preferences.d/nosnap.pref
     sudo apt update -y
 
-    if [$flavor == "Ubuntu"] || [$flavor == "ubuntu"]
+    if [ "$flavor" == "ubuntu" ]
     then
         sudo apt install --install-suggests gnome-software -y
     fi
@@ -58,7 +65,7 @@ install_firefox_deb () {
 install_flatpak() {
     sudo apt install flatpak -y
 
-    if [$flavor == "Ubuntu"] || [$flavor == "ubuntu"]
+    if [ "$flavor" == "ubuntu" ]
     then
         sudo apt install gnome-software-plugin-flatpak -y
     else
