@@ -2,6 +2,7 @@
 
 newline=$'\n'
 snap_packages=$(snap list | awk 'NR > 1 {print $1}')
+readarray -t snap_packages_list <<<"$snap_packages"
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
 
@@ -30,7 +31,6 @@ ask_for_flavor() {
 }
 
 purge_snaps() {
-    readarray -t snap_packages_list <<<"$snap_packages"
     for num in 1 3; do
         for snap in "${snap_packages_list[@]}"
         do
@@ -49,6 +49,19 @@ purge_snaps() {
     then
         sudo apt install --install-suggests gnome-software -y
     fi
+
+    echo "deb http://packages.linuxmint.com vera upstream" | sudo tee /etc/apt/sources.list.d/mint-vera.list
+    sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 40976EAF437D05B5 3B4FE6ACC0B21F32 A6616109451BBBF2
+    sudo apt update
+    cat <<EOF | sudo tee /etc/apt/preferences.d/pin-chromium
+    Package: *
+    Pin: release o=linuxmint
+    Pin-Priority: -1
+
+    Package: chromium
+    Pin: release o=linuxmint
+    Pin-Priority: 1000
+    EOF
 
     echo "${newline}All snaps packages have been purged!"
 }
