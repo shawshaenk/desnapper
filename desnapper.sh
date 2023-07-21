@@ -14,7 +14,7 @@ fi
 ask_for_flavor() {
     while true
     do
-        read -p "${newline}Input what flavor of Ubuntu you're running${newline}Note: Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
+        read -p "${newline}Input what flavor of Ubuntu you're running${newline}Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
 
         # Convert the input to lowercase for case-insensitive comparison
         flavor=$(echo "$flavor" | tr '[:upper:]' '[:lower:]')
@@ -70,12 +70,12 @@ install_flatpak() {
     then
         sudo apt install gnome-software-plugin-flatpak -y
     else
-        sudo apt install plasma-discover-flatpak-backend
+        sudo apt install plasma-discover-backend-flatpak
     fi
 
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    echo "${newline}Flatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."
+    echo "${newline}Flatpak and Flathub are now installed and enabled! Log in and out for the changes to fully take effect."
 }
 
 ask_for_flavor
@@ -98,7 +98,7 @@ while true; do
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
-        * ) echo "${newline}Invalid response, try again!${newline}";
+        * ) echo "${newline}Invalid response, try again!";
     esac
 done
 
@@ -109,6 +109,6 @@ while true; do
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
-        * ) echo "${newline}Invalid response, try again!${newline}";
+        * ) echo "${newline}Invalid response, try again!";
     esac
 done
