@@ -50,18 +50,9 @@ purge_snaps() {
         sudo apt install --install-suggests gnome-software -y
     fi
 
-    echo "deb http://packages.linuxmint.com vera upstream" | sudo tee /etc/apt/sources.list.d/mint-vera.list
+    echo "deb http://packages.linuxmint.com victoria upstream" | sudo tee /etc/apt/sources.list.d/mint-vera.list
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 40976EAF437D05B5 3B4FE6ACC0B21F32 A6616109451BBBF2
     sudo apt update
-    cat <<EOF | sudo tee /etc/apt/preferences.d/pin-chromium
-    Package: *
-    Pin: release o=linuxmint
-    Pin-Priority: -1
-
-    Package: chromium
-    Pin: release o=linuxmint
-    Pin-Priority: 1000
-    EOF
 
     echo "${newline}All snaps packages have been purged!"
 }
