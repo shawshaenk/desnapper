@@ -5,7 +5,7 @@ snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
 
-if [ $distro_name != "/etc/os-release:NAME=Ubuntu" ]
+if [ $distro_name != '/etc/os-release:NAME="Ubuntu"' ]
 then
     echo "${newline}Sorry, this script only supports Ubuntu and its flavors"
     exit
@@ -14,7 +14,7 @@ fi
 ask_for_flavor() {
     while true
     do
-        read -p "Input what flavor of Ubuntu you're running${newline}Note: Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
+        read -p "${newline}Input what flavor of Ubuntu you're running${newline}Note: Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
 
         # Convert the input to lowercase for case-insensitive comparison
         flavor=$(echo "$flavor" | tr '[:upper:]' '[:lower:]')
@@ -24,7 +24,7 @@ ask_for_flavor() {
         then
             break
         else
-            echo "${newline}Invalid response, please try again!${newline}"
+            echo "${newline}Invalid response, please try again!"
         fi
     done
 }
@@ -85,9 +85,9 @@ while true; do
     case $yn in 
         [yY] ) purge_snaps;
         break;;
-        [nN] ) echo Okay;
+        [nN] ) echo "${newline}Okay";
         break;;
-        * ) echo "${newline}Invalid response, try again!${newline}";
+        * ) echo "${newline}Invalid response, try again!";
     esac
 done
 
