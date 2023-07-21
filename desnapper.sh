@@ -3,6 +3,10 @@
 newline=$'\n'
 snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 distro_name=$(cat /etc/*-release | awk 'FNR == 2')
+if [$distro_name != "Ubuntu"] || [$distro_name != "Kubuntu"]
+then
+    exit
+fi
 
 purge_snaps() {
     readarray -t snap_packages_list <<<"$snap_packages"
@@ -40,13 +44,13 @@ install_firefox_deb () {
 install_flatpak() {
     sudo apt install flatpak -y
 
-    if [ "$distro_name" == "Kubuntu" ]
+    if [ "$distro_name" = "Kubuntu" ]
     then 
         sudo apt install plasma-discover-backend-flatpak
     else
         sudo apt install gnome-software-plugin-flatpak -y
     fi
-    
+
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
     echo "${newline}Flatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."
