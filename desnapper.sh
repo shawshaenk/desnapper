@@ -5,7 +5,7 @@ snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
 
-if [$distro_name != "/etc/os-release:NAME=Ubuntu"]
+if [ $distro_name != "/etc/os-release:NAME=Ubuntu" ]
 then
     echo "${newline}Sorry, this script only supports Ubuntu and its flavors"
     exit
@@ -32,7 +32,8 @@ ask_for_flavor() {
 purge_snaps() {
     readarray -t snap_packages_list <<<"$snap_packages"
     for num in 1 3; do
-        for snap in "${snap_packages_list[@]}"; do
+        for snap in "${snap_packages_list[@]}"
+        do
             if [ "$snap" != "snapd" ]; then 
                 killall $snap
                 sudo snap remove --purge $snap
@@ -80,7 +81,7 @@ install_flatpak() {
 ask_for_flavor
 
 while true; do
-    read -p $"WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n]" yn
+    read -p "${newline}WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n]" yn
     case $yn in 
         [yY] ) purge_snaps;
         break;;
@@ -91,7 +92,7 @@ while true; do
 done
 
 while true; do
-    read -p $"${newline}Would you like to install the Firefox .deb package? [Y/n]" yn
+    read -p "${newline}Would you like to install the Firefox .deb package? [Y/n]" yn
     case $yn in 
         [yY] ) install_firefox_deb;
         break;;
@@ -102,7 +103,7 @@ while true; do
 done
 
 while true; do
-    read -p $"${newline}Would you like to install Flatpak/Flathub? [Y/n]" yn
+    read -p "${newline}Would you like to install Flatpak/Flathub? [Y/n]" yn
     case $yn in 
         [yY] ) install_flatpak;
         break;;
