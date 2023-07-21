@@ -14,10 +14,10 @@ fi
 ask_for_flavor() {
     while true
     do
-        read -p "Input what flavor of Ubuntu you're running${newline}(Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu).: " flavor
+        read -p 'Input what flavor of Ubuntu you're running${newline}Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: ' flavor
         if [$flavor != "Ubuntu"] || [$flavor != "ubuntu"] || [$flavor != "Kubuntu"] || [$flavor != "kubuntu"]
         then
-            echo "${newline} Invalid response, please try again!${newline}"
+            echo "${newline}Invalid response, please try again!${newline}"
         fi
     done
 }
