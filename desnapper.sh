@@ -70,7 +70,7 @@ install_flatpak() {
     then
         sudo apt install gnome-software-plugin-flatpak -y
     else
-        sudo apt install plasma-discover-backend-flatpak
+        sudo apt install plasma-discover-backend-flatpak -y
     fi
 
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
