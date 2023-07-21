@@ -2,6 +2,7 @@
 
 newline=$'\n'
 snap_packages=$(snap list | awk 'NR > 1 {print $1}')
+distro_name=$(cat /etc/*-release | awk 'FNR == 2')
 
 purge_snaps() {
     readarray -t snap_packages_list <<<"$snap_packages"
@@ -17,7 +18,11 @@ purge_snaps() {
     sudo apt remove --autoremove snapd -y 
     echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" | sudo tee /etc/apt/preferences.d/nosnap.pref
     sudo apt update -y
-    sudo apt install --install-suggests gnome-software -y
+
+    if [ "$distro_name" != "Kubuntu" ]
+    then 
+        sudo apt install --install-suggests gnome-software -y
+    fi
 
     echo "${newline}All snaps packages have been purged!"
 }
@@ -34,7 +39,14 @@ install_firefox_deb () {
 
 install_flatpak() {
     sudo apt install flatpak -y
-    sudo apt install gnome-software-plugin-flatpak -y
+
+    if [ "$distro_name" == "Kubuntu" ]
+    then 
+        sudo apt install plasma-discover-backend-flatpak
+    else
+        sudo apt install gnome-software-plugin-flatpak -y
+    fi
+    
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
     echo "${newline}Flatpak and Flathub are now installed and enabled! Reboot for the changes to take effect."
