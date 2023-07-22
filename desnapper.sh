@@ -94,7 +94,7 @@ replace_snaps() {
             for package_to_install in "${snap_packages_list[@]}"
             do
                 snap_to_flatpak=$(grep "^${package_to_install}," applist.csv | cut -d',' -f2)
-                flatpak install $snap_to_flatpak
+                flatpak install $snap_to_flatpak -y
             done
         fi
     fi
