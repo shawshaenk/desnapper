@@ -5,9 +5,8 @@ snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 readarray -t snap_packages_list <<<"$snap_packages"
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
-firefox_flatpak=""
 
-if [ $distro_name != 'NAME="Ubuntu"' ]
+if [ $distro_name != '/etc/os-release:NAME="Ubuntu"' ]
 then
     echo "${newline}Sorry, this script only supports Ubuntu and its flavors"
     exit
@@ -90,7 +89,9 @@ replace_snaps() {
                 flatpak install "$snap_to_flatpak" -y
             fi
         else
-            sudo apt install "$package_to_install" -y
+            if ! grep -q "${package_to_install}" "excluded_snaps.txt"; then
+                sudo apt install "$package_to_install" -y
+            fi
         fi
     done
 }
@@ -101,7 +102,7 @@ while true
 do
     read -p "${newline}WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n] " yn
     case $yn in 
-        [yY] ) purge_snaps;
+        [yY] | [yY]"" ) purge_snaps;
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
@@ -113,7 +114,7 @@ while true
 do
     read -p "${newline}Would you like to install the Firefox .deb package? [Y/n] " yn
     case $yn in 
-        [yY] ) install_firefox_deb;
+        [yY] | [yY]"" ) install_firefox_deb;
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
@@ -125,7 +126,7 @@ while true
 do
     read -p "${newline}Would you like to install Flatpak/Flathub? [Y/n] " yn
     case $yn in 
-        [yY] ) install_flatpak;
+        [yY] | [yY]"" ) install_flatpak;
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
@@ -137,7 +138,7 @@ while true
 do
     read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages?${newline}NOTE: NOT ALL SNAPS HAVE EQUIVALENT .DEBS/FLATPAKS [Y/n] " yn
     case $yn in 
-        [yY] ) replace_snaps
+        [yY] | [yY]"" ) replace_snaps
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
