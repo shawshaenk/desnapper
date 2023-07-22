@@ -5,6 +5,7 @@ snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 readarray -t snap_packages_list <<<"$snap_packages"
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
+deb_or_snap=""
 
 if [ $distro_name != '/etc/os-release:NAME="Ubuntu"' ]
 then
@@ -15,7 +16,7 @@ fi
 ask_for_flavor() {
     while true
     do
-        read -p "${newline}Input what flavor of Ubuntu you're running${newline}Don't put in the exact flavor. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
+        read -p "FLAVOR IS NEEDED TO DECIDE WHICH COMMANDS TO RUN${newline}Input either Ubuntu or Kubuntu. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
 
         # Convert the input to lowercase for case-insensitive comparison
         flavor=$(echo "$flavor" | tr '[:upper:]' '[:lower:]')
@@ -75,13 +76,35 @@ install_flatpak() {
 
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    echo "${newline}Flatpak and Flathub are now installed and enabled! Log in and out for the changes to fully take effect."
+    echo "${newline}Flatpak and Flathub are now installed and enabled!"
+}
+
+replace_snaps() {
+    if [ $deb_or_snap == 'deb' ]
+    then
+        for package_to_install in "${snap_packages_list[@]}"
+        do
+            sudo apt install $package_to_install -y
+        done
+    else
+        if grep -Fxq "$package_to_install" excluded_snaps.txt
+        then
+            :
+        else
+            for package_to_install in "${snap_packages_list[@]}"
+            do
+                snap_to_flatpak=$(grep "^${package_to_install}," applist.csv | cut -d',' -f2)
+                flatpak install $snap_to_flatpak
+            done
+        fi
+    fi
 }
 
 ask_for_flavor
 
-while true; do
-    read -p "${newline}WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n]" yn
+while true
+do
+    read -p "${newline}WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n] " yn
     case $yn in 
         [yY] ) purge_snaps;
         break;;
@@ -91,8 +114,9 @@ while true; do
     esac
 done
 
-while true; do
-    read -p "${newline}Would you like to install the Firefox .deb package? [Y/n]" yn
+while true
+do
+    read -p "${newline}Would you like to install the Firefox .deb package? [Y/n] " yn
     case $yn in 
         [yY] ) install_firefox_deb;
         break;;
@@ -102,11 +126,33 @@ while true; do
     esac
 done
 
-while true; do
-    read -p "${newline}Would you like to install Flatpak/Flathub? [Y/n]" yn
+while true
+do
+    read -p "${newline}Would you like to install Flatpak/Flathub? [Y/n] " yn
     case $yn in 
         [yY] ) install_flatpak;
         break;;
+        [nN] ) echo "${newline}Okay";
+        break;;
+        * ) echo "${newline}Invalid response, try again!";
+    esac
+done
+
+while true
+do
+    read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages? [Y/n] " yn
+    case $yn in 
+        [yY] )
+            read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages? [deb/Flatpak] " deb_or_snap
+            deb_or_snap=$(echo "${deb_or_snap}" | tr '[:upper:]' '[:lower:]')
+            case $deb_or_snap in
+                deb) replace_snaps
+                break;;
+                flatpak) replace_snaps
+                break;;
+                *) echo "${newline}Invalid response, try again!";
+            esac
+            ;;
         [nN] ) echo "${newline}Okay";
         break;;
         * ) echo "${newline}Invalid response, try again!";
