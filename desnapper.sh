@@ -6,6 +6,7 @@ readarray -t snap_packages_list <<<"$snap_packages"
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
 deb_or_snap=""
+firefox_flatpak=""
 
 if [ $distro_name != '/etc/os-release:NAME="Ubuntu"' ]
 then
@@ -55,6 +56,8 @@ purge_snaps() {
 }
 
 install_firefox_deb () {
+    echo "firefox" >> excluded_snaps.txt
+
     sudo add-apt-repository ppa:mozillateam/ppa -y 
     sudo apt update -y
     sudo apt install -t 'o=LP-PPA-mozillateam' firefox -y
