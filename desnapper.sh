@@ -5,10 +5,9 @@ snap_packages=$(snap list | awk 'NR > 1 {print $1}')
 readarray -t snap_packages_list <<<"$snap_packages"
 distro_name=$(grep -w NAME= --no-group-separator /etc/*-release)
 flavor=""
-deb_or_snap=""
 firefox_flatpak=""
 
-if [ $distro_name != '/etc/os-release:NAME="Ubuntu"' ]
+if [ $distro_name != 'NAME="Ubuntu"' ]
 then
     echo "${newline}Sorry, this script only supports Ubuntu and its flavors"
     exit
@@ -83,24 +82,17 @@ install_flatpak() {
 }
 
 replace_snaps() {
-    if [ $deb_or_snap == 'deb' ]
-    then
-        for package_to_install in "${snap_packages_list[@]}"
-        do
-            sudo apt install $package_to_install -y
-        done
-    else
-        if grep -Fxq "$package_to_install" excluded_snaps.txt
-        then
-            :
-        else
-            for package_to_install in "${snap_packages_list[@]}"
-            do
+    install_flatpak
+    for package_to_install in "${snap_packages_list[@]}"; do
+        if grep -Fxq "${package_to_install}" applist.csv; then
+            if ! grep -q "${package_to_install}" "excluded_snaps.txt"; then
                 snap_to_flatpak=$(grep "^${package_to_install}," applist.csv | cut -d',' -f2)
-                flatpak install $snap_to_flatpak -y
-            done
+                flatpak install "$snap_to_flatpak" -y
+            fi
+        else
+            sudo apt install "$package_to_install" -y
         fi
-    fi
+    done
 }
 
 ask_for_flavor
@@ -145,19 +137,12 @@ while true
 do
     read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages?${newline}NOTE: NOT ALL SNAPS HAVE EQUIVALENT .DEBS/FLATPAKS [Y/n] " yn
     case $yn in 
-        [yY] )
-            read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages? [deb/Flatpak] " deb_or_snap
-            deb_or_snap=$(echo "${deb_or_snap}" | tr '[:upper:]' '[:lower:]')
-            case $deb_or_snap in
-                deb) replace_snaps
-                break;;
-                flatpak) replace_snaps
-                break;;
-                *) echo "${newline}Invalid response, try again!";
-            esac
-            ;;
+        [yY] ) replace_snaps
+        break;;
         [nN] ) echo "${newline}Okay";
         break;;
         * ) echo "${newline}Invalid response, try again!";
     esac
 done
+
+echo "${newline}Make sure to reboot for the script's changes to fully take effect!"
