@@ -140,7 +140,7 @@ done
 
 while true
 do
-    read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages? [Y/n] " yn
+    read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages?${newline}NOTE: NOT ALL SNAPS HAVE EQUIVALENT .DEBS/FLATPAKS [Y/n] " yn
     case $yn in 
         [yY] )
             read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages? [deb/Flatpak] " deb_or_snap
