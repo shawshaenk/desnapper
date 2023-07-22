@@ -1,5 +1,6 @@
 # About
 DO NOT RUN THIS SCRIPT AT THE MOMENT. IT'S STILL ACTIVELY BEING DEVELOPED AND TESTED.
+
 A simple Bash script to rid Ubuntu of Snaps and prevent them from coming back.
 
 # Running the Script
