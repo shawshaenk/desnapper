@@ -43,12 +43,11 @@ purge_snaps() {
     echo "Package: snapd${newline}Pin: release a=*${newline}Pin-Priority: -10" | sudo tee /etc/apt/preferences.d/nosnap.pref
     sudo apt update -y
 
-    if [ "$flavor" == "ubuntu" ]
-    then
-        sudo apt install --install-suggests gnome-software -y
-    fi
-
     echo "${newline}All snaps packages have been purged!"
+}
+
+install_gnome_software() {
+    sudo apt install --install-suggests gnome-software -y
 }
 
 install_firefox_deb () {
@@ -83,6 +82,18 @@ do
     read -p "${newline}WARNING: THE FOLLOWING SNAP PACKAGES AND THEIR DATA WILL BE REMOVED:${newline}${snap_packages}${newline}DO YOU WANT TO CONTINUE? [Y/n] " yn
     case $yn in 
         [yY] | [yY]"" ) purge_snaps;
+        break;;
+        [nN] ) echo "${newline}Okay";
+        break;;
+        * ) echo "${newline}Invalid response, try again!";
+    esac
+done
+
+while true
+do
+    read -p "${newline}Would you like to install Gnome Software? [Y/n] " yn
+    case $yn in 
+        [yY] | [yY]"" ) install_gnome_software;
         break;;
         [nN] ) echo "${newline}Okay";
         break;;
