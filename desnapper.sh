@@ -17,10 +17,8 @@ ask_for_flavor() {
     do
         read -p "FLAVOR IS NEEDED TO DECIDE WHICH COMMANDS TO RUN${newline}Input either Ubuntu or Kubuntu. If you're running Kubuntu, put in Kubuntu. If you're running ANY other flavor, just put in Ubuntu: " flavor
 
-        # Convert the input to lowercase for case-insensitive comparison
         flavor=$(echo "$flavor" | tr '[:upper:]' '[:lower:]')
 
-        # Check if the flavor is valid and break the loop if it is
         if [ "$flavor" == "ubuntu" ] || [ "$flavor" == "kubuntu" ]
         then
             break
@@ -54,8 +52,6 @@ purge_snaps() {
 }
 
 install_firefox_deb () {
-    echo "firefox" >> excluded_snaps.txt
-
     sudo add-apt-repository ppa:mozillateam/ppa -y 
     sudo apt update -y
     sudo apt install -t 'o=LP-PPA-mozillateam' firefox -y
@@ -78,22 +74,6 @@ install_flatpak() {
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
     echo "${newline}Flatpak and Flathub are now installed and enabled!"
-}
-
-replace_snaps() {
-    install_flatpak
-    for package_to_install in "${snap_packages_list[@]}"; do
-        if grep -Fxq "${package_to_install}" applist.csv; then
-            if ! grep -q "${package_to_install}" "excluded_snaps.txt"; then
-                snap_to_flatpak=$(grep "^${package_to_install}," applist.csv | cut -d',' -f2)
-                flatpak install "$snap_to_flatpak" -y
-            fi
-        else
-            if ! grep -q "${package_to_install}" "excluded_snaps.txt"; then
-                sudo apt install "$package_to_install" -y
-            fi
-        fi
-    done
 }
 
 ask_for_flavor
@@ -134,16 +114,5 @@ do
     esac
 done
 
-while true
-do
-    read -p "${newline}Would you like to replace all removed snaps with .deb/Flatpak packages?${newline}NOTE: NOT ALL SNAPS HAVE EQUIVALENT .DEBS/FLATPAKS [Y/n] " yn
-    case $yn in 
-        [yY] | [yY]"" ) replace_snaps
-        break;;
-        [nN] ) echo "${newline}Okay";
-        break;;
-        * ) echo "${newline}Invalid response, try again!";
-    esac
-done
-
+echo "${newline}Thank you for using this script!"
 echo "${newline}Make sure to reboot for the script's changes to fully take effect!"
